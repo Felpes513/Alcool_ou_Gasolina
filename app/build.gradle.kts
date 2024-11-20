@@ -1,3 +1,7 @@
+fun kapt(room: Any, any: Any) {
+
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)

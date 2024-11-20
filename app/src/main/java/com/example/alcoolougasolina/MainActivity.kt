@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -50,24 +50,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
+    var valorGasolina by remember { mutableStateOf("") }
+    var valorAlcool by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+    var postoNome by remember { mutableStateOf("") }
 
-    var valorGasolina by remember {
-        mutableStateOf("")
-    }
-    var valorAlcool by remember {
-        mutableStateOf("")
-    }
-    //Como centralizar o texto ou modificar o tema?
     Column(
         Modifier
             .background(Color(0XFF00BCD4))
             .fillMaxSize(),
-        //Como colocar as informações no centro?
         verticalArrangement = Arrangement.Center,
-        //E como alinhar?
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //como fazer para adicionar um texto?
         Text(
             text = "Alcool ou Gasolina",
             style = TextStyle(
@@ -76,6 +70,7 @@ fun App() {
                 fontWeight = FontWeight.Bold
             )
         )
+
         if (valorAlcool.isNotBlank() && valorGasolina.isNotBlank()) {
             val ehGasolina = valorAlcool.toDouble() / valorGasolina.toDouble() > 0.7
             val alcoolOuGasolina = if (ehGasolina) {
@@ -99,35 +94,59 @@ fun App() {
             )
         }
 
-        Spacer(modifier = Modifier.size(16.dp))//cria um espaço entre as informações
+        Spacer(modifier = Modifier.size(16.dp))
 
-        /*Existem maneira diferentes de layout como Bpx que vai fazer tudo ficar um em cima do outro
-        Existe também o colum que coloca cada uma em uma coluna, e também tem o row que deixa todos na mesma linha*/
-
-        //Neste projeto terá um grupo de texto, como faz pra adicionar um grupo de texto?
-        TextField(value = valorGasolina,
-            onValueChange = {
-                valorGasolina = it
-            },
-            label = {
-                Text(text = "Gasolina")
-            }
+        TextField(
+            value = valorGasolina,
+            onValueChange = { valorGasolina = it },
+            label = { Text(text = "Gasolina") }
         )
 
-        Spacer(modifier = Modifier.size(16.dp))//cria um espaço entre as informações
+        Spacer(modifier = Modifier.size(16.dp))
 
         TextField(
             value = valorAlcool,
-            onValueChange = {
-                valorAlcool = it
-            },
-            label = {
-                Text(text = "Alcool")
-            }
+            onValueChange = { valorAlcool = it },
+            label = { Text(text = "Alcool") }
         )
 
-    }
+        Spacer(modifier = Modifier.size(16.dp))
 
+        Button(onClick = { showDialog = true }) {
+            Text("Adicionar Posto")
+        }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = {
+                    Text(text = "Adicionar Posto")
+                },
+                text = {
+                    Column {
+                        TextField(
+                            value = postoNome,
+                            onValueChange = { postoNome = it },
+                            label = { Text("Nome do Posto") }
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        showDialog = false
+                        // Lógica para salvar ou processar o nome do posto
+                    }) {
+                        Text("Salvar")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
+    }
 }
 
 @Preview
